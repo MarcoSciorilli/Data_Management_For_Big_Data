@@ -1,0 +1,298 @@
+
+\documentclass[11pt]{report}
+\usepackage[english]{babel}       % for proper word breaking at line ends
+\usepackage[a4paper, left=1.2 in, right=1.2 in, top=1.5in, bottom=1.5in]{geometry}
+                                % for page size and margin settings
+\usepackage{graphicx}           % for ?
+\usepackage{amsmath,amssymb}    % for better equations
+\usepackage{amsthm}             % for better theorem styles
+\usepackage{mathtools}          % for greek math symbol formatting
+\DeclarePairedDelimiter\bra{\langle}{\rvert}
+\DeclarePairedDelimiter\ket{\lvert}{\rangle}
+\usepackage{physics}
+\usepackage{enumitem}           % for control of 'enumerate' numbering
+\usepackage{listings}           % for control of 'itemize' spacing
+\usepackage{todonotes}          % for clear TODO notes
+\usepackage{hyperref}           % page numbers and '\ref's become clickable
+\usepackage{float}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{subfig}
+\usepackage{multirow}
+\setlength\parindent{20pt}
+\usepackage{titling}
+\usepackage{pdfpages}
+\usepackage[fixlanguage]{babelbib}
+\usepackage{svg}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%    FRONTESPIZIO    %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%             ||               %
+%             ||               %
+%             \/               %
+\def\thesistitle{Data Management for Big Data}
+
+\def\thesisauthorfirst{Marco}
+\def\thesisauthorsecond{Sciorilli}
+\def\thesisdate{Gennaio 2021}
+
+
+%             /\               %
+%             ||               %
+%             ||               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%    FRONTESPIZIO    %%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+%% FOR PDF METADATA
+\title{\thesistitle}
+\author{\thesisauthorfirst\space\thesisauthorsecond}
+\date{\thesisdate}
+
+%% TODO PACKAGE
+\newcommand{\towrite}[1]{\todo[inline,color=yellow!10]{NOG SCHRIJVEN: #1}}
+
+%% THEOREM STYLES
+\newtheorem{theorem}{Stelling}[subsection*]
+\newtheorem{corollary}{Gevolg}[theorem]
+\newtheorem{Lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Propositie}
+
+\theoremstyle{definition}
+\newtheorem{definition}[theorem]{Definitie}
+
+\theoremstyle{remark}
+\newtheorem*{remark}{Opmerking}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+\begin{titlepage}
+	\thispagestyle{empty}
+	\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+	\center
+	\begin{flushleft}
+	\textsc{University of Trieste}\\[.3cm]
+	\textsc{International School for Advanced Studies}\\[.3cm]	
+	\textsc{The Abdus Salam International Centre for Theoretical Physics}\\[.3cm]
+	\end{flushleft}
+	\HRule \\[0.7cm]
+	{ \huge \bfseries \thesistitle }\\[0.1cm]
+	\HRule \\[.7cm]
+	\textsc{\large Lectures Notes}\\[2cm]
+	\begin{minipage}{\textwidth}
+	\begin{center}
+	\includesvg[width=30mm]{Sigilli/sigillounits.svg}\hspace{0.9cm}
+	\includegraphics[width=30mm,page=1]{Sigilli/SISSA official logo_0.pdf}\hspace{0.9cm}
+	\includesvg[width=30mm]{Sigilli/International_Centre_for_Theoretical_Physics.svg}\\[6cm]
+    \end{center}
+	\begin{flushright} \large
+	\emph{Author:}\\
+	\thesisauthorfirst\space \textsc{\thesisauthorsecond}
+	\end{flushright}
+	\end{minipage}
+	\vfill
+	{\large \thesisdate}\\
+	\clearpage
+\end{titlepage}
+
+
+
+\centerline{\large{\textbf{Abstract}}}
+{\parindent0pt
+
+}
+\tableofcontents
+
+\newpage
+
+
+\chapter{Lecture 1}
+\subsection*{DBMS}
+Store information about a particular domain. A collation of interrelated data, plus a set of programs that allow you to access the data in an efficient and convinient way (it deals with security, and how data is stored on disk, the low level management).
+First approch: create database application on top of already stored data. Problems: 
+\begin{itemize}
+    \item Inconsistency.
+    \item Difficulty accessing data.
+    \item  Data isolation.
+    \item Integrity problems (constrains).
+    \item Atomicity of updates: failures in hardwares leaves partially. updated data.
+    \item Concurrent access by multiple users: problems with performance and security in partly secreted data in the database.
+\end{itemize}
+What justify adoption of DBMS?
+\begin{itemize}
+    \item Deal with large amount of data: cannot be loaded in its entirity on the main memory, but you have to store it on the disk. We have to deal with the transfer between RAM and Disk. We have to take into account the number of transfer, it is the main bottleneck, because it is slow.
+    \item We have global data: important for a vast array of user and applications, so it has to don't have constrain, it has to not be tie  to anyone. So, concurrency.
+    \item Persistence of Data: lives independently from applications and user who are using it. The content of a program does not life independently, they are released as the program finish (it has to be resilient to failure, have a mechanism to make data life even if there are troubles).
+\end{itemize}
+
+\subsection*{Levels of Abstraction}
+\begin{itemize}
+    \item Physical level: data transfer, how to store information on the disk, the low level stuff. 
+    \item Logical level: definition of the structure of the data stored in the database. Relational model store information inside tables. Not worrying about storage.
+    \item View level: display information in order to be used by different user.
+\end{itemize}
+Independence between logical and physical level grant that it is possible to ignore the low level stuff, so it is very important. 
+
+\subsection*{Instances and schemas}
+
+Are similar to variable definition  and instances in a program.
+In a database there are schemas and instances.
+Schemas:
+\begin{itemize}
+    \item Logical schemas: information for the model, for example, of "a costumers" and the relations between them. Defining the structure of the data, like defining the data.
+    \item Physical schemas: how the data are actually stored. For examples: costumer stored row wise. 
+\end{itemize}
+Instances: the actual data stored in the schemas. For example the actual data of the costumer. 
+\subsection*{Data Models}
+Tools for describing data, their relationships, semantics and constrains.
+\begin{itemize}
+    \item Relational model is the most important data model (above the physical model), store information using tables.
+    \item Entity-relationship: used in design fase, define the requirements that the database has to fulfill, for not database expert people.
+    \item Object-oriented: exist, we will not study it.
+    \item Semistructured data: not a fixed structure (XML).
+    \item Network model and Hierarchical Model: not used anymore, closely tied to the underling representation, the physical level.  
+\end{itemize}
+
+\subsection*{Relational Model}
+Use tables to represent the data and their relationship. Example(relation of data is the columns, the instances are given by the row, the structure is fixed. Columns with the same name, create a relationship between the tables -> join operation to combine the data in each table)
+
+
+\subsection*{DDL}
+Defines the database schema.
+All the things defined in the logical schemas are stored in the data dictionary, not accessible to the user. It also contain information about authorization problems. Finally, it store information about the integrity constrains of the instances.
+
+Primary keys: minimal subset that allows one to uniquely identify every instances of a table.
+
+\subsection*{DML}
+Allows to populate the rows of a table. Two types of languages:
+\begin{itemize}
+    \item Pure: theoretical, useful to proves proprieties about computational power. Relational Algebra, have a practical use because is used by optimizer (use to find the most efficient way to work with data in a particular problem)
+    \item Commercial: Use to interact with an actual database commercially, it is SQL (Structured Query Language). It is a declarative language:(opposite of functional language, where you have to specify every step of the operations you want to perform) typical, you just define what you want to obtain from the database. It find by itself the most effective way to perform the operation you want to do. IT IS NOT TURING COMPLETE, because it lacks recursion. It is a standard defined language, but there are different "flavors" of it, when it has to address more complex problems (it has different implementations).
+\end{itemize}
+
+
+\subsection*{Database Design}
+Design the base design of the database. 
+\begin{itemize}
+    \item Logical design: tables, relations... there are good and bad ways to do so. On one side there are business decision (what it HAS to be included, ex. salary of professor). Then there are a computer science decision. A table is good if the satisfaction of the integrity constrains defined over the tables  is sufficient to guarantee the semantic (the intended meaning).(ex.) There is the primary key constrain: not two rows that matches in the primary key. (example: the table respects the primary key constrain, but it repeats a lot of data, with conflicting information. Also, a row can't be interested without all the information, even if it is not important (example, new professor without a department, or if we want to reallocate all the professor from a department-> it is mixing two different kind of data, resolvable by splitting the tables, it is usually the default strategy.) 
+    \item Physical design
+\end{itemize}
+\subsection*{Database Engine}
+Several modules that deals with:storage of the data, one for queries, transaction manager 
+\begin{itemize}
+    \item Storage manager: Operate with the operating system, the low level stuff.
+    \item Query processing: passed in order to see if it is expressed correctly, than translated to relational algebra, and optimized by an optimizer.It find the cleverest way to answer the query you submitted: there are many different way to respond to a query. For example, given a table, a strategy to find a instance is to can scan all the table, and find the one you are interested in (it is correct, but very slow). Indexes is a data structure used to speed up such a query. 
+    \item Transitional Management: What if a system fails?The problem is handled by the transitional management. It tries to avoid all the inconsistency during a transaction.
+\end{itemize}
+
+\subsection*{Attribute Types}
+The set of possibles values of a attributes is called the domain. 
+Attributes values must be atomic (first normal form property). 
+Null is a special values that belong to every domain, it means "unknown". Different semantic interpretation: the value is still unknown, for the moment.
+Another case is the one in which the information is not applicable (for example, the results of the exam that a patient has not taken at all, an maybe will never take. Putting a dummy value will fuck up all the statistical analysis performed on the table).
+It cause complications in the definition of many operations. 
+
+\subsection*{Relation schema and instance}
+$R=(A_1,A_2,..,A_n)$ represent the relation between the $A_1...A_n$ attribute. It is a defined subset of the Cartesian product of the attributes. 
+
+A tuple and a row are synonyms for us. R represent a relation schema, r is a relation instance of R (a set of rows of R) $ r \in R = r(R)$, and t represent a tuple.
+The relations are unordered, as we are talking about sets (so its irrelevant).
+
+\subsection*{Keys}
+
+Let $K \subset of R$, K is a superkey of R if values of K are sufficient to identify a unique tuple of each possible relation $r(R)$. A superkey is a candidate key if it is minimal. 
+A table may have more than a candidate keys, to choose one as the primary key is a matter of choice, usually from some domain information (usually the one that has less information,better to order data $\rightarrow$ small in sense of number of column)
+
+Foreign key constraint: set a relation between two tables.
+\begin{itemize}
+    \item Referencing relation: the values in one relation, must appear in another. 
+    \item Referenced relation: use only instance already present in the referred relation.
+\end{itemize}
+
+
+\subsection*{Design Phases}
+\begin{itemize}
+    \item Conceptual Design: use entity relationship model. Identify the most important information wanted to be tracked in the database, and the relationship between them.
+    \item Logical Design
+    \item Physical Design
+\end{itemize}
+
+\subsection*{Design Approaches}
+\begin{itemize}
+    \item Entity relationship model: collection of entities and relationship. An entity is an object in the domain we are interested in, distinguishable from every other object, is described by a set of attributes. It is identified by a set of attributes. 
+    Entity relationship is diagrammatical way to represent it. 
+    Entity relationship model is used during the designing fase, so it cannot be populated.  A set of entities is a set of entities that share a bunch of attributes (a contenitor for sets). We usually use a subset of attributes to uniquely identify each entity of an entity set, so we use it as a primary key.
+    Relationship: association among entities. Relationship set: is a relation among entities taken from different entities, each taken from entities set.
+\item Normalization theory
+\end{itemize}
+
+\subsection*{Degree of relationship set}
+Different kind of relationship set:
+\begin{itemize}
+    \item Binary relationship: between two entities set.
+    \item More than two relation.
+\end{itemize}
+\subsection*{Mapping cardinality Constraints}
+Number of entities to which another entity can be associated via a relationship set. Useful in particular for binary relationship sets. Binary relationship set the mapping cardinality. 
+There can be different cardinality constrain that can be specified:one to one, one to many, many to one,and many to many.
+There is also a lower bound on the participation: it can be partial/optional, or total/mandatory. The second means that the entities has to take part in the relationship. 
+\subsection*{Complex attributes}
+Different kind of attributes:
+\begin{itemize}
+    \item Simple, and composite: single are atomic, while composite could be splitted. 
+    \item Single-valued or multi-valued.
+    \item Derived attributes: they encode the function to get attributes from other attributes.
+\end{itemize}
+\subsection*{Weak entity sets}
+An entities set could happen to not have a natural primary key. For example: room number in an hotel. It itself is not a primary key, so it is the weak entity, but through the identifying relationship, the hotel became the indenting entity, (the one with the primary key), so it is the strong entity. All the weak entity goes to a single entity, because it is the identifying entity. In the example we must have the room number together with the hotel, not by itself. Also, a weak entity can be a strong entity (the identifying entity) for another entities set (example, from stronger to weaker: city, hotel, room). So we can have a chain of weak entities.
+
+\chapter{Lecture 2}
+\subsection*{Constrains in table}
+In the construction of a table, one can enforce a non-null constrain. Another kind of constrain is that we can't have two equal attribute for the different instances.
+There is than the foreign key constrain: it translate into a relationship. 
+\subsection*{E-R diagrams}
+Box represent different entity set, with all the attributes listed in rows. Relationship set are represented by diamonds, it connect entity set through lines. If you want to specify an attribute for a relationship set, you can link it to the diamond using a dotted line. Relationship set can occur inside the same box (entity set), in this case you indicate the instance interested on the joining lines.
+Cardinality constrains can be displayed using a directed line, signifying one, ore an undirected line, meaning many. A single line means that the partecipation is partial, a doule line that is total. An alternative (and better) way to display the same information, is to write the number of participation on the line connecting relationship set and boxes. The star (*) means there is no limit in the partecipation.
+\subsection*{Notation of attributes}
+Example: Name is a composite attribute, with three component.
+Street is composite attribute, with inside another composite attributes. 
+{} specifies a multivalue attribute.
+() is actually a function, not a real value. 
+\subsection*{Expression of weak and strong entities set}
+Double border around the weak entity, and double arrow for the relationship. Every relation refers to exactly one course, so single arrow. (example of the university database)
+\subsection*{Non-binary relationship for entity diagram}
+Example of three different entities: relationship set in the center is composed of triples. Using the same notation as before, we can specify the cardinality constrains. (ex.)Each instructor have to follow at least one student, but in general more than one. The notations is ambiguous, it doesn't specify if the number over the arr0w is talking about students or project. In this case usually there are specification in natural language: write in English the constrain in between diagrams. 
+\subsection*{Cardinality constrain on ternary relationship}
+Slide specify why the other kind of notation is better and easier to read. 
+\subsection*{Specialization}
+example: database for car rental company. We have a entity set called "vehicle", with attributes "plate", "weight"... But there can be different kinds of vehicles: cars, with their number of passenger, trucks, with its weight attribute...Both of them are vehicles with "plate" and "weight". So you can draw an arrow which connect the children entities with the parent: the children are called specialization entities. The specialization inherit the attributes of the parent, but also its relationships. Then they can have attributes and relationships that are only of the specialization entity. 
+There can be overlapping and disjoint specialization, and total or partial specialization. It is a good idea to specify the kind of specialization in plain English on the arrow. If the specialization is total, then each entity must be specialized in a lower entity (the entity of the parent must be specified in one of the child, the specialization), otherwise there can be entities that are not part of one of the specializations, but are only instance of the parent. A specialization is overlapping when the entity it specialize is a dichotomy of the lower entities, it cannot be more than one of the lower at the same time. There can be all the combination of this properties. 
+\subsection*{Long and tedious example}
+...Black points are candicate keys, white points are just attributes...
+\subsection*{Analysis of the natural language task}
+\begin{itemize}
+    \item Identify synonyms and homonyms.
+    \item Construct a glossary of therms.
+    \item ...
+\end{itemize}
+Domain expert could directly states the kind of operations he wants to do on the database, and they also need to be tracked down, but doesn't affect the diagram. It will be important to translate into the actual relational model.\\
+Distinguish between attributes and entities: you can decide depending on the complexity of what you are considering.
+\subsection*{Strategies}
+Top-down: write down the most important concept, relationship and entities, required in the text, then proceed with the specialization. Start from the skeleton, then enrich it.
+Bottom-up is the opposite, starting from the attributes.  
+Inside-out and mixed are not relevant.
+(draw.io website to draw diagrams)
+Triggers, automatic action that a database do when populated, are  used to enforce constrains. 
+\subsection*{Complex one to one cases}
+Three different cases:
+1. E1 with two attributes, E2 with two attributes, relationship R, and participation constrain 1,1 and 0,1. 
+
+
+
+
+\end{document}
+
